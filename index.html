@@ -941,21 +941,21 @@
         <div class="payment-plans">
           <div class="payment-plan" onclick="selectPlan('basic')">
             <h3 class="plan-name">Basique</h3>
-            <div class="plan-price">10,000 Ar/mois</div>
+            <div class="plan-price">1000 Ar/mois</div>
             <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Accès aux vidéos de base</li>
-              <li><i class="fas fa-check"></i> Chat public</li>
-              <li><i class="fas fa-times"></i> Chat privé</li>
+              <li><i class="fas fa-check"></i> Tsy misy bonus </li>
+              <li><i class="fas fa-check"></i> Tsy afaka mahazo pdf</li>
+              <li><i class="fas fa-times"></i> Tsy afaka mahazo formtion feno</li>
             </ul>
           </div>
           
           <div class="payment-plan" onclick="selectPlan('premium')">
             <h3 class="plan-name">Premium</h3>
-            <div class="plan-price">25,000 Ar/mois</div>
+            <div class="plan-price">2000 Ar/mois</div>
             <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Tous les avantages Basique</li>
-              <li><i class="fas fa-check"></i> Chat privé illimité</li>
-              <li><i class="fas fa-check"></i> Téléchargement des vidéos</li>
+              <li><i class="fas fa-check"></i> mahazo bonus</li>
+              <li><i class="fas fa-check"></i> mahazo pdf </li>
+              <li><i class="fas fa-check"></i> mahazo formation feno</li>
             </ul>
           </div>
         </div>
@@ -1450,7 +1450,7 @@
       const paymentRef = db.ref('payments/' + currentUser.uid);
       paymentRef.set({
         plan: selectedPlan,
-        amount: selectedPlan === 'basic' ? 10000 : 25000,
+        amount: selectedPlan === 'basic' ? 1000 : 2000,
         status: 'pending',
         createdAt: Date.now(),
         userId: currentUser.uid,
