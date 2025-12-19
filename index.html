@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mikotse - Plateforme de Travail</title>
+  <title>Microtache - Plateforme de Travail</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    /* CSS existant reste inchangé */
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
@@ -804,6 +805,57 @@
       right: -5px;
     }
 
+    /* Bonus Page */
+    .bonus-container {
+      max-width: 500px;
+      margin: 2rem auto;
+    }
+
+    .bonus-card {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: var(--radius);
+      padding: 3rem 2rem;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+    }
+
+    .bonus-logo {
+      font-size: 4rem;
+      color: white;
+      margin-bottom: 1.5rem;
+    }
+
+    .bonus-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .bonus-message {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      line-height: 1.8;
+    }
+
+    .bonus-btn {
+      background: white;
+      color: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      padding: 1rem 2rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 2rem;
+    }
+
+    .bonus-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
       .main-container {
@@ -842,6 +894,18 @@
       
       .video-actions {
         flex-direction: column;
+      }
+      
+      .bonus-card {
+        padding: 2rem 1rem;
+      }
+      
+      .bonus-title {
+        font-size: 1.5rem;
+      }
+      
+      .bonus-message {
+        font-size: 1rem;
       }
     }
   </style>
@@ -914,6 +978,25 @@
     </div>
   </div>
 
+  <!-- Nouvelle Page Bonus -->
+  <div id="bonusPage" class="page">
+    <div class="bonus-container">
+      <div class="bonus-card">
+        <div class="bonus-logo">
+          <i class="fas fa-gift"></i>
+        </div>
+        <h1 class="bonus-title">OFFRE SPÉCIALE</h1>
+        <div class="bonus-message" id="bonusMessage">
+          <!-- Le message sera rempli dynamiquement avec le nom d'utilisateur -->
+        </div>
+        <button class="bonus-btn" onclick="acceptBonus()">
+          <i class="fas fa-check-circle"></i>
+          Accepté
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="paymentPage" class="page">
     <div class="payment-container">
       <div class="auth-card">
@@ -939,28 +1022,59 @@
         </div>
         
         <div class="payment-plans">
-          <div class="payment-plan" onclick="selectPlan('basic')">
-            <h3 class="plan-name">Basique</h3>
-            <div class="plan-price">1000 Ar/mois</div>
-            <ul class="plan-features">
-              <li><i class="fas fa-check"></i> Tsy misy bonus </li>
-              <li><i class="fas fa-check"></i> Tsy afaka mahazo pdf</li>
-              <li><i class="fas fa-times"></i> Tsy afaka mahazo formtion feno</li>
-            </ul>
-          </div>
+          
+          
           
           <div class="payment-plan" onclick="selectPlan('premium')">
             <h3 class="plan-name">Premium</h3>
-            <div class="plan-price">2000 Ar/mois</div>
+            <div class="plan-price">2,000 Ar/mois</div>
             <ul class="plan-features">
-              <li><i class="fas fa-check"></i> mahazo bonus</li>
-              <li><i class="fas fa-check"></i> mahazo pdf </li>
-              <li><i class="fas fa-check"></i> mahazo formation feno</li>
+              <li><i class="fas fa-check"></i> Tous les avantages Basique</li>
+              <li><i class="fas fa-check"></i> Chat privé illimité</li>
+              <li><i class="fas fa-check"></i> Téléchargement des vidéos</li>
             </ul>
           </div>
         </div>
         
-        <button class="auth-btn" id="paymentBtn" onclick="processPayment()">J'ai payé</button>
+        <!-- Formulaire d'informations de paiement -->
+        <div id="paymentFormContainer" style="display: none; margin-top: 2rem;">
+          <h3 style="margin-bottom: 1rem; color: var(--primary);">Informations de virement</h3>
+          <form id="paymentInfoForm">
+            <div class="form-group">
+              <label class="form-label">1. Numéro de téléphone de l'expéditeur *</label>
+              <input type="text" class="form-input" id="senderPhone" required placeholder="Numéro utilisé pour envoyer l'argent">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">2. Nom complet de l'expéditeur *</label>
+              <input type="text" class="form-input" id="senderName" required placeholder="Nom de la personne qui a envoyé l'argent">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">3. Date d'envoi de l'argent *</label>
+              <input type="date" class="form-input" id="sendDate" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">4. Lieu d'envoi *</label>
+              <input type="text" class="form-input" id="sendLocation" required placeholder="Ex: Antananarivo, Tamatave, etc.">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">5. Contact de l'expéditeur</label>
+              <input type="text" class="form-input" id="senderContact" placeholder="Email ou autre numéro de contact">
+              <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                Pour vous contacter en cas de besoin
+              </small>
+            </div>
+            
+            <button type="submit" class="auth-btn">
+              <i class="fas fa-paper-plane"></i> Envoyer
+            </button>
+          </form>
+        </div>
+        
+        <button class="auth-btn" id="paymentBtn" onclick="showPaymentForm()">J'ai payé</button>
       </div>
     </div>
   </div>
@@ -1054,10 +1168,16 @@
               <thead>
                 <tr>
                   <th>Utilisateur</th>
+                  <th>Email</th>
                   <th>Plan</th>
                   <th>Montant</th>
+                  <th>Numéro expéditeur</th>
+                  <th>Nom expéditeur</th>
+                  <th>Date envoi</th>
+                  <th>Lieu envoi</th>
+                  <th>Contact</th>
+                  <th>Date soumission</th>
                   <th>Statut</th>
-                  <th>Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -1217,7 +1337,13 @@
           <form id="profileForm">
             <div class="form-group">
               <label class="form-label">Photo de profil</label>
-              <input type="file" class="form-input" id="profilePhoto" accept="image/*">
+              <input type="file" class="form-input" id="profilePhoto" accept="image/*" onchange="compressAndPreviewImage(this)">
+              <small style="color: var(--text-muted); display: block; margin-top: 0.25rem;">
+                L'image sera automatiquement compressée
+              </small>
+              <div id="imagePreview" style="margin-top: 1rem; display: none;">
+                <img id="previewImage" style="max-width: 200px; border-radius: var(--radius);">
+              </div>
             </div>
             
             <div class="form-group">
@@ -1290,11 +1416,17 @@
               </div>
               
               <div class="chat-container">
+                <div class="chat-header" id="privateChatHeader">
+                  <div class="chat-title">
+                    <i class="fas fa-user"></i>
+                    <span id="currentChatContact">Sélectionnez un contact</span>
+                  </div>
+                </div>
                 <div class="chat-messages" id="privateChatMessages"></div>
                 <div class="chat-input-container">
                   <form class="chat-input-form" id="privateChatForm">
-                    <input type="text" class="chat-input" id="privateChatInput" placeholder="Tapez votre message...">
-                    <button type="submit" class="send-message-btn">
+                    <input type="text" class="chat-input" id="privateChatInput" placeholder="Tapez votre message..." disabled>
+                    <button type="submit" class="send-message-btn" disabled>
                       <i class="fas fa-paper-plane"></i>
                     </button>
                   </form>
@@ -1310,6 +1442,10 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Notifications</h3>
+            <button class="video-action" onclick="markAllNotificationsAsRead()" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+              <i class="fas fa-check-double"></i>
+              Tout marquer comme lu
+            </button>
           </div>
           
           <div id="notificationsList">
@@ -1350,6 +1486,14 @@
     let selectedPlan = null;
     let currentChatContact = null;
     const ADMIN_CODE = "080600";
+    const BONUS_END_DATE = new Date('2025-12-25T23:59:59');
+    let compressedImageBase64 = null;
+
+    // Vérifier si on est dans la période de bonus
+    function isBonusPeriod() {
+      const now = new Date();
+      return now < BONUS_END_DATE;
+    }
 
     // Initialize the app
     function init() {
@@ -1363,7 +1507,6 @@
         if (user) {
           currentUser = user;
           loadUserData(user.uid);
-          checkPaymentStatus(user.uid);
         } else {
           showPage('signupPage');
         }
@@ -1377,11 +1520,58 @@
         const userData = snapshot.val();
         if (userData) {
           updateProfileUI(userData);
+          checkUserAccess(userId, userData);
         }
       });
     }
 
-    // Check payment status
+    // Vérifier l'accès de l'utilisateur
+    function checkUserAccess(userId, userData) {
+      // Vérifier si l'utilisateur a accepté le bonus
+      if (userData.bonusAccepted && isBonusPeriod()) {
+        // Période bonus et utilisateur a accepté
+        showPage('homePage');
+        setupHomePage();
+        return;
+      }
+
+      // Si hors période bonus, vérifier le paiement
+      if (!isBonusPeriod()) {
+        checkPaymentStatus(userId);
+        return;
+      }
+
+      // Période bonus mais utilisateur n'a pas encore accepté
+      showBonusPage(userData.name);
+    }
+
+    // Afficher la page bonus
+    function showBonusPage(userName) {
+      const bonusMessage = document.getElementById('bonusMessage');
+      bonusMessage.innerHTML = `
+        <strong>SALAMA ${userName}</strong> Faly izahay manolotra ho anao ny fampianarana asa en ligne gratuit eto aminay. 
+        Ity tolotra ity dia hifarana hatramin'ny le 25/12/2025 hoavy izao. 
+        Tsindrio ny bokitra Accepté eo ambany mba afahanao taditra amin'ny fampianarana.
+      `;
+      showPage('bonusPage');
+    }
+
+    // Accepter le bonus
+    function acceptBonus() {
+      if (!currentUser) return;
+
+      const userRef = db.ref('users/' + currentUser.uid);
+      userRef.update({
+        bonusAccepted: true,
+        bonusAcceptedAt: Date.now(),
+        bonusExpiresAt: BONUS_END_DATE.getTime()
+      }).then(() => {
+        showPage('homePage');
+        setupHomePage();
+      });
+    }
+
+    // Check payment status (pour après le bonus)
     function checkPaymentStatus(userId) {
       const paymentRef = db.ref('payments/' + userId);
       paymentRef.on('value', (snapshot) => {
@@ -1402,6 +1592,7 @@
         } else if (paymentData && paymentData.status === 'pending') {
           showPage('pendingPage');
         } else {
+          // Hors période bonus et pas de paiement
           showPage('paymentPage');
         }
       });
@@ -1435,7 +1626,18 @@
       event.currentTarget.classList.add('selected');
     }
 
-    // Process payment
+    // Afficher le formulaire de paiement
+    function showPaymentForm() {
+      if (!selectedPlan) {
+        alert('Veuillez sélectionner un plan');
+        return;
+      }
+      
+      document.getElementById('paymentBtn').style.display = 'none';
+      document.getElementById('paymentFormContainer').style.display = 'block';
+    }
+
+    // Processus de paiement complet
     function processPayment() {
       if (!selectedPlan) {
         alert('Veuillez sélectionner un plan');
@@ -1447,17 +1649,58 @@
         return;
       }
 
+      // Récupérer les informations du formulaire
+      const senderPhone = document.getElementById('senderPhone').value;
+      const senderName = document.getElementById('senderName').value;
+      const sendDate = document.getElementById('sendDate').value;
+      const sendLocation = document.getElementById('sendLocation').value;
+      const senderContact = document.getElementById('senderContact').value;
+
+      // Validation des champs obligatoires
+      if (!senderPhone || !senderName || !sendDate || !sendLocation) {
+        alert('Veuillez remplir tous les champs obligatoires (*)');
+        return;
+      }
+
       const paymentRef = db.ref('payments/' + currentUser.uid);
       paymentRef.set({
         plan: selectedPlan,
-        amount: selectedPlan === 'basic' ? 1000 : 2000,
+        amount: selectedPlan === 'basic' ? 10000 : 2000,
         status: 'pending',
         createdAt: Date.now(),
         userId: currentUser.uid,
-        userName: currentUser.displayName || 'Utilisateur'
+        userName: currentUser.displayName || 'Utilisateur',
+        userEmail: currentUser.email,
+        // Nouvelles informations
+        senderPhone: senderPhone,
+        senderName: senderName,
+        sendDate: sendDate,
+        sendLocation: sendLocation,
+        senderContact: senderContact,
+        paymentDate: new Date().toISOString()
+      }).then(() => {
+        showPage('pendingPage');
+        
+        // Envoyer aussi une copie admin
+        const adminPaymentRef = db.ref('adminPayments').push();
+        adminPaymentRef.set({
+          userId: currentUser.uid,
+          userName: currentUser.displayName || 'Utilisateur',
+          userEmail: currentUser.email,
+          plan: selectedPlan,
+          amount: selectedPlan === 'basic' ? 10000 : 2000,
+          status: 'pending',
+          senderPhone: senderPhone,
+          senderName: senderName,
+          sendDate: sendDate,
+          sendLocation: sendLocation,
+          senderContact: senderContact,
+          submittedAt: Date.now(),
+          createdAt: new Date().toISOString()
+        });
+      }).catch((error) => {
+        alert('Erreur lors de l\'enregistrement du paiement: ' + error.message);
       });
-
-      showPage('pendingPage');
     }
 
     // Setup event listeners
@@ -1468,6 +1711,12 @@
       document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
       document.getElementById('adminLoginForm').addEventListener('submit', handleAdminLogin);
       document.getElementById('videoForm').addEventListener('submit', handleAddVideo);
+
+      // Formulaire d'informations de paiement
+      document.getElementById('paymentInfoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        processPayment();
+      });
 
       // Navigation
       document.querySelectorAll('.nav-link').forEach(link => {
@@ -1507,7 +1756,12 @@
             createdAt: Date.now()
           });
 
-          showPage('paymentPage');
+          // Vérifier si on est dans la période bonus
+          if (isBonusPeriod()) {
+            showBonusPage(name);
+          } else {
+            showPage('paymentPage');
+          }
         })
         .catch((error) => {
           alert('Erreur lors de l\'inscription: ' + error.message);
@@ -1525,7 +1779,7 @@
         .then((userCredential) => {
           // User signed in
           currentUser = userCredential.user;
-          checkPaymentStatus(currentUser.uid);
+          loadUserData(currentUser.uid);
         })
         .catch((error) => {
           alert('Erreur lors de la connexion: ' + error.message);
@@ -1546,6 +1800,132 @@
       }
     }
 
+    // Load admin data
+    function loadAdminData() {
+      loadPendingPaymentsAdmin();
+      loadAdminVideos();
+    }
+
+    // Load pending payments for admin
+    function loadPendingPaymentsAdmin() {
+      const paymentsRef = db.ref('payments').orderByChild('status').equalTo('pending');
+      paymentsRef.on('value', (snapshot) => {
+        const payments = snapshot.val();
+        const paymentsTable = document.getElementById('paymentsTable');
+        paymentsTable.innerHTML = '';
+
+        if (!payments) {
+          paymentsTable.innerHTML = '<tr><td colspan="12">Aucun paiement en attente</td></tr>';
+          return;
+        }
+
+        Object.entries(payments).forEach(([userId, payment]) => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${escapeHtml(payment.userName || 'Utilisateur')}</td>
+            <td>${escapeHtml(payment.userEmail || 'N/A')}</td>
+            <td>${escapeHtml(payment.plan)}</td>
+            <td>${payment.amount} Ar</td>
+            <td>${escapeHtml(payment.senderPhone || 'N/A')}</td>
+            <td>${escapeHtml(payment.senderName || 'N/A')}</td>
+            <td>${payment.sendDate || 'N/A'}</td>
+            <td>${escapeHtml(payment.sendLocation || 'N/A')}</td>
+            <td>${escapeHtml(payment.senderContact || 'N/A')}</td>
+            <td>${formatTime(payment.createdAt)}</td>
+            <td><span class="status-badge status-pending">En attente</span></td>
+            <td>
+              <button class="auth-btn" onclick="confirmPayment('${userId}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; margin-right: 0.5rem;">
+                Confirmer
+              </button>
+              <button class="auth-btn" onclick="rejectPayment('${userId}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: var(--error);">
+                Rejeter
+              </button>
+            </td>
+          `;
+          paymentsTable.appendChild(row);
+        });
+      });
+    }
+
+    // Confirm payment from admin
+    function confirmPayment(userId) {
+      const paymentRef = db.ref('payments/' + userId);
+      paymentRef.update({
+        status: 'confirmed',
+        confirmedAt: Date.now(),
+        confirmedBy: 'admin'
+      }).then(() => {
+        alert('Paiement confirmé avec succès!');
+        
+        // Create notification for user
+        const notificationRef = db.ref(`notifications/${userId}`).push();
+        notificationRef.set({
+          type: 'payment',
+          text: 'Votre paiement a été confirmé. Vous pouvez maintenant accéder à la plateforme.',
+          timestamp: Date.now(),
+          read: false
+        });
+      });
+    }
+
+    // Reject payment from admin
+    function rejectPayment(userId) {
+      if (confirm('Êtes-vous sûr de vouloir rejeter ce paiement?')) {
+        const paymentRef = db.ref('payments/' + userId);
+        paymentRef.update({
+          status: 'rejected',
+          rejectedAt: Date.now(),
+          rejectedBy: 'admin'
+        }).then(() => {
+          alert('Paiement rejeté!');
+        });
+      }
+    }
+
+    // Compress and preview image
+    function compressAndPreviewImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          // Calculate new dimensions (max 800px)
+          let width = img.width;
+          let height = img.height;
+          const maxSize = 800;
+          
+          if (width > height && width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          } else if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          // Draw and compress image
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          // Convert to base64 with quality compression
+          compressedImageBase64 = canvas.toDataURL('image/jpeg', 0.7);
+          
+          // Show preview
+          const preview = document.getElementById('previewImage');
+          preview.src = compressedImageBase64;
+          document.getElementById('imagePreview').style.display = 'block';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     // Handle profile update
     function handleProfileUpdate(e) {
       e.preventDefault();
@@ -1555,26 +1935,21 @@
       const name = document.getElementById('editName').value;
       const birthdate = document.getElementById('editBirthdate').value;
       const bio = document.getElementById('editBio').value;
-      const photoFile = document.getElementById('profilePhoto').files[0];
 
       const updates = {
         name: name,
         birthdate: birthdate,
-        bio: bio
+        bio: bio,
+        updatedAt: Date.now()
       };
 
-      if (photoFile) {
-        // Upload profile picture
-        const storageRef = storage.ref('profilePictures/' + currentUser.uid);
-        storageRef.put(photoFile)
-          .then((snapshot) => snapshot.ref.getDownloadURL())
-          .then((url) => {
-            updates.profilePicture = url;
-            saveProfileUpdates(updates);
-          });
-      } else {
-        saveProfileUpdates(updates);
+      if (compressedImageBase64) {
+        // Enregistrer l'image compressée en base64 dans Firebase
+        updates.profilePicture = compressedImageBase64;
+        updates.profilePictureBase64 = compressedImageBase64; // Stockage supplémentaire en base64
       }
+
+      saveProfileUpdates(updates);
     }
 
     // Save profile updates to Firebase
@@ -1583,6 +1958,9 @@
       userRef.update(updates)
         .then(() => {
           alert('Profil mis à jour avec succès!');
+          compressedImageBase64 = null;
+          document.getElementById('imagePreview').style.display = 'none';
+          document.getElementById('profilePhoto').value = '';
         })
         .catch((error) => {
           alert('Erreur lors de la mise à jour: ' + error.message);
@@ -1593,7 +1971,13 @@
     function updateProfileUI(userData) {
       document.getElementById('profileName').textContent = userData.name || 'Utilisateur';
       document.getElementById('profileBio').textContent = userData.bio || 'Aucune biographie';
-      document.getElementById('profilePicture').src = userData.profilePicture || 'https://via.placeholder.com/120';
+      
+      // Utiliser l'image base64 si disponible
+      if (userData.profilePictureBase64) {
+        document.getElementById('profilePicture').src = userData.profilePictureBase64;
+      } else {
+        document.getElementById('profilePicture').src = userData.profilePicture || 'https://via.placeholder.com/120';
+      }
       
       if (document.getElementById('editName')) {
         document.getElementById('editName').value = userData.name || '';
@@ -1849,8 +2233,17 @@
       const messagesContainer = document.getElementById('publicChatMessages');
       const messageElement = document.createElement('div');
       messageElement.className = `message ${message.authorId === currentUser.uid ? 'own' : ''}`;
+      
+      // Utiliser l'image base64 si disponible
+      let avatarSrc = 'https://via.placeholder.com/36';
+      if (message.authorProfilePictureBase64) {
+        avatarSrc = message.authorProfilePictureBase64;
+      } else if (message.authorProfilePicture) {
+        avatarSrc = message.authorProfilePicture;
+      }
+      
       messageElement.innerHTML = `
-        <img src="${message.authorProfilePicture || 'https://via.placeholder.com/36'}" 
+        <img src="${avatarSrc}" 
              alt="Profile" class="message-avatar">
         <div class="message-content">
           <div class="message-header">
@@ -1874,16 +2267,23 @@
 
       if (!text) return;
 
-      const messageRef = db.ref('publicChat').push();
-      messageRef.set({
-        text: text,
-        authorId: currentUser.uid,
-        authorName: currentUser.displayName || 'Utilisateur',
-        authorProfilePicture: currentUser.photoURL || 'https://via.placeholder.com/36',
-        timestamp: Date.now()
-      });
+      // Récupérer les données utilisateur pour l'avatar
+      const userRef = db.ref('users/' + currentUser.uid);
+      userRef.once('value').then((snapshot) => {
+        const userData = snapshot.val();
+        
+        const messageRef = db.ref('publicChat').push();
+        messageRef.set({
+          text: text,
+          authorId: currentUser.uid,
+          authorName: userData.name || 'Utilisateur',
+          authorProfilePicture: userData.profilePicture || 'https://via.placeholder.com/36',
+          authorProfilePictureBase64: userData.profilePictureBase64 || null,
+          timestamp: Date.now()
+        });
 
-      input.value = '';
+        input.value = '';
+      });
     }
 
     // Load private chat
@@ -1902,8 +2302,15 @@
 
           const contactElement = document.createElement('div');
           contactElement.className = 'contact';
+          
+          // Utiliser l'image base64 si disponible
+          let avatarSrc = user.profilePicture || 'https://via.placeholder.com/40';
+          if (user.profilePictureBase64) {
+            avatarSrc = user.profilePictureBase64;
+          }
+          
           contactElement.innerHTML = `
-            <img src="${user.profilePicture || 'https://via.placeholder.com/40'}" 
+            <img src="${avatarSrc}" 
                  alt="Profile" class="contact-avatar">
             <div class="contact-info">
               <div class="contact-name">${escapeHtml(user.name)}</div>
@@ -1930,6 +2337,11 @@
       // Update UI
       document.querySelectorAll('.contact').forEach(c => c.classList.remove('active'));
       event.currentTarget.classList.add('active');
+      
+      // Activer le chat
+      document.getElementById('privateChatInput').disabled = false;
+      document.querySelector('#privateChatForm button').disabled = false;
+      document.getElementById('currentChatContact').textContent = contact.name;
 
       // Load chat messages
       loadPrivateMessages(contactId);
@@ -1961,8 +2373,17 @@
       const messagesContainer = document.getElementById('privateChatMessages');
       const messageElement = document.createElement('div');
       messageElement.className = `message ${message.senderId === currentUser.uid ? 'own' : ''}`;
+      
+      // Utiliser l'image base64 si disponible
+      let avatarSrc = 'https://via.placeholder.com/36';
+      if (message.senderProfilePictureBase64) {
+        avatarSrc = message.senderProfilePictureBase64;
+      } else if (message.senderProfilePicture) {
+        avatarSrc = message.senderProfilePicture;
+      }
+      
       messageElement.innerHTML = `
-        <img src="${message.senderProfilePicture || 'https://via.placeholder.com/36'}" 
+        <img src="${avatarSrc}" 
              alt="Profile" class="message-avatar">
         <div class="message-content">
           <div class="message-header">
@@ -1990,29 +2411,37 @@
       if (!text) return;
 
       const chatId = [currentUser.uid, currentChatContact.id].sort().join('_');
-      const messageRef = db.ref(`privateChat/${chatId}`).push();
       
-      messageRef.set({
-        text: text,
-        senderId: currentUser.uid,
-        senderName: currentUser.displayName || 'Utilisateur',
-        senderProfilePicture: currentUser.photoURL || 'https://via.placeholder.com/36',
-        receiverId: currentChatContact.id,
-        timestamp: Date.now()
-      });
+      // Récupérer les données utilisateur pour l'avatar
+      const userRef = db.ref('users/' + currentUser.uid);
+      userRef.once('value').then((snapshot) => {
+        const userData = snapshot.val();
+        
+        const messageRef = db.ref(`privateChat/${chatId}`).push();
+        
+        messageRef.set({
+          text: text,
+          senderId: currentUser.uid,
+          senderName: userData.name || 'Utilisateur',
+          senderProfilePicture: userData.profilePicture || 'https://via.placeholder.com/36',
+          senderProfilePictureBase64: userData.profilePictureBase64 || null,
+          receiverId: currentChatContact.id,
+          timestamp: Date.now()
+        });
 
-      // Create notification for receiver
-      const notificationRef = db.ref(`notifications/${currentChatContact.id}`).push();
-      notificationRef.set({
-        type: 'message',
-        fromUserId: currentUser.uid,
-        fromUserName: currentUser.displayName || 'Utilisateur',
-        text: `Nouveau message de ${currentUser.displayName || 'Utilisateur'}`,
-        timestamp: Date.now(),
-        read: false
-      });
+        // Create notification for receiver
+        const notificationRef = db.ref(`notifications/${currentChatContact.id}`).push();
+        notificationRef.set({
+          type: 'message',
+          fromUserId: currentUser.uid,
+          fromUserName: userData.name || 'Utilisateur',
+          text: `Nouveau message de ${userData.name || 'Utilisateur'}`,
+          timestamp: Date.now(),
+          read: false
+        });
 
-      input.value = '';
+        input.value = '';
+      });
     }
 
     // Load notifications
@@ -2041,7 +2470,7 @@
           notificationElement.className = `notification-item ${notification.read ? '' : 'unread'}`;
           notificationElement.innerHTML = `
             <div class="notification-icon">
-              <i class="fas fa-comment"></i>
+              <i class="fas fa-${notification.type === 'payment' ? 'credit-card' : 'comment'}"></i>
             </div>
             <div class="notification-content">
               <div class="notification-text">${escapeHtml(notification.text)}</div>
@@ -2065,6 +2494,24 @@
       const notificationRef = db.ref(`notifications/${currentUser.uid}/${notificationId}`);
       notificationRef.update({
         read: true
+      });
+    }
+
+    // Mark all notifications as read
+    function markAllNotificationsAsRead() {
+      if (!currentUser) return;
+
+      const notificationsRef = db.ref(`notifications/${currentUser.uid}`);
+      notificationsRef.once('value').then((snapshot) => {
+        const notifications = snapshot.val();
+        if (!notifications) return;
+
+        const updates = {};
+        Object.keys(notifications).forEach(notificationId => {
+          updates[`${notificationId}/read`] = true;
+        });
+
+        notificationsRef.update(updates);
       });
     }
 
@@ -2099,62 +2546,6 @@
     // Admin functions
     function showAdminLogin() {
       showPage('adminPage');
-    }
-
-    function loadAdminData() {
-      loadPendingPayments();
-      loadAdminVideos();
-    }
-
-    function loadPendingPayments() {
-      const paymentsRef = db.ref('payments').orderByChild('status').equalTo('pending');
-      paymentsRef.on('value', (snapshot) => {
-        const payments = snapshot.val();
-        const paymentsTable = document.getElementById('paymentsTable');
-        paymentsTable.innerHTML = '';
-
-        if (!payments) {
-          paymentsTable.innerHTML = '<tr><td colspan="6">Aucun paiement en attente</td></tr>';
-          return;
-        }
-
-        Object.entries(payments).forEach(([paymentId, payment]) => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${escapeHtml(payment.userName)}</td>
-            <td>${escapeHtml(payment.plan)}</td>
-            <td>${payment.amount} Ar</td>
-            <td><span class="status-badge status-pending">En attente</span></td>
-            <td>${formatTime(payment.createdAt)}</td>
-            <td>
-              <button class="auth-btn" onclick="confirmPayment('${paymentId}', '${payment.userId}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                Confirmer
-              </button>
-            </td>
-          `;
-          paymentsTable.appendChild(row);
-        });
-      });
-    }
-
-    function confirmPayment(paymentId, userId) {
-      const paymentRef = db.ref('payments/' + userId);
-      paymentRef.update({
-        status: 'confirmed',
-        confirmedAt: Date.now(),
-        confirmedBy: 'admin'
-      }).then(() => {
-        alert('Paiement confirmé avec succès!');
-        
-        // Create notification for user
-        const notificationRef = db.ref(`notifications/${userId}`).push();
-        notificationRef.set({
-          type: 'payment',
-          text: 'Votre paiement a été confirmé. Vous pouvez maintenant accéder à la plateforme.',
-          timestamp: Date.now(),
-          read: false
-        });
-      });
     }
 
     // Handle add video
